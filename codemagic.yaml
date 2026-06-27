@@ -8,14 +8,16 @@ workflows:
       - name: Extract ZIP
         script: |
           cd $CM_BUILD_DIR
-          unzip al-quran-kareem.zip -d extracted || true
-          if [ -d "extracted" ]; then
-            cp -r extracted/* . 2>/dev/null || true
-          fi
+          unzip al-quran-kareem.zip -d extracted
+          cp -r extracted/* .
+      - name: Setup Gradle Wrapper
+        script: |
+          cd $CM_BUILD_DIR
+          gradle wrapper --gradle-version 8.11.1
+          chmod +x gradlew
       - name: Build APK
         script: |
           cd $CM_BUILD_DIR
-          chmod +x gradlew
           ./gradlew assembleDebug
     artifacts:
       - app/build/outputs/apk/**/*.apk
