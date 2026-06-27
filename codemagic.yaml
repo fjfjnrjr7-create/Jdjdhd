@@ -1,0 +1,21 @@
+workflows:
+  android-workflow:
+    name: Android Build
+    max_build_duration: 60
+    environment:
+      java: 17
+    scripts:
+      - name: Extract ZIP
+        script: |
+          cd $CM_BUILD_DIR
+          unzip al-quran-kareem.zip -d extracted || true
+          if [ -d "extracted" ]; then
+            cp -r extracted/* . 2>/dev/null || true
+          fi
+      - name: Build APK
+        script: |
+          cd $CM_BUILD_DIR
+          chmod +x gradlew
+          ./gradlew assembleDebug
+    artifacts:
+      - app/build/outputs/apk/**/*.apk
